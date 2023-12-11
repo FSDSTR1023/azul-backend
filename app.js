@@ -26,8 +26,14 @@ async function main() {
 main().catch((err) => console.log(err));
 
 const userRoutes = require("./routes/user.routes");
+const machineRoutes = require("./routes/machine.routes");
+const incidentRoutes = require("./routes/incident.routes");
+const rentRoutes = require("./routes/rent.routes");
 
 app.use("/user", userRoutes);
+app.use("/machine", machineRoutes);
+app.use("/incident", incidentRoutes);
+app.use("/rent", rentRoutes);
 
 app.get("/", (req, res) => {
   console.log(process.env.DB_USER, "process.env.DB_USER de app.js");
