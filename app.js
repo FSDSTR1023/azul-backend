@@ -25,9 +25,9 @@ async function main() {
 }
 main().catch((err) => console.log(err));
 
-const userClienteRoutes = require("./routes/userCliente.routes");
+const userRoutes = require("./routes/user.routes");
 
-app.use("/user", userClienteRoutes);
+app.use("/user", userRoutes);
 
 app.get("/", (req, res) => {
   console.log(process.env.DB_USER, "process.env.DB_USER de app.js");

@@ -1,7 +1,7 @@
-const UserCliente = require("../models/userCliente.model");
+const User = require("../models/user.model");
 
-async function createUserCliente(req, res) {
-  UserCliente.create(req.body)
+async function createUser(req, res) {
+  User.create(req.body)
     .then((user) => {
       console.log("user created successfully", user);
       res.status(200).json(user);
@@ -12,8 +12,8 @@ async function createUserCliente(req, res) {
     });
 }
 
-async function getAllUsersCliente(req, res) {
-  UserCliente.find()
+async function getAllUsers(req, res) {
+  User.find()
     .then((user) => {
       console.log("users found", user);
       res.status(200).json(user);
@@ -24,8 +24,8 @@ async function getAllUsersCliente(req, res) {
     });
 }
 
-async function getUserClienteById(req, res) {
-  UserCliente.findById(req.params.id)
+async function getUserById(req, res) {
+  User.findById(req.params.id)
     .then((user) => {
       console.log("User found by ID: ", user);
       res.status(200).json(user);
@@ -36,8 +36,8 @@ async function getUserClienteById(req, res) {
     });
 }
 
-async function updateUserCliente(req, res) {
-  UserCliente.findByIdAndUpdate(
+async function updateUser(req, res) {
+  User.findByIdAndUpdate(
     req.params.id,
     req.body,
     { upsert: true },
@@ -53,8 +53,8 @@ async function updateUserCliente(req, res) {
     });
 }
 
-async function deleteUserCliente(req, res) {
-  UserCliente.findByIdAndDelete(req.params.id)
+async function deleteUser(req, res) {
+  User.findByIdAndDelete(req.params.id)
     .then((user) => {
       console.log("The user has been deleted", user);
       res.status(200).json(user);
@@ -66,9 +66,9 @@ async function deleteUserCliente(req, res) {
 }
 
 module.exports = {
-  createUserCliente,
-  getAllUsersCliente,
-  getUserClienteById,
-  updateUserCliente,
-  deleteUserCliente,
+  createUser,
+  getAllUsers,
+  getUserById,
+  updateUser,
+  deleteUser,
 };
