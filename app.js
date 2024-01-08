@@ -1,10 +1,12 @@
 const express = require("express");
 const cors = require("cors");
+const cookieParser = require("cookie-parser");
 const app = express();
 const port = 3000;
 
 app.use(express.json());
 require("dotenv").config();
+app.use(cookieParser());
 
 const mongoose = require("mongoose");
 const mongoDB =
@@ -25,11 +27,13 @@ async function main() {
 }
 main().catch((err) => console.log(err));
 
+const authRoutes = require("./routes/auth.routes");
 const userRoutes = require("./routes/user.routes");
 const machineRoutes = require("./routes/machine.routes");
 const incidentRoutes = require("./routes/incident.routes");
 const rentRoutes = require("./routes/rent.routes");
 
+app.use("/api", authRoutes);
 app.use("/user", userRoutes);
 app.use("/machine", machineRoutes);
 app.use("/incident", incidentRoutes);
