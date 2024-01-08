@@ -33,8 +33,7 @@ const machineRoutes = require("./routes/machine.routes");
 const incidentRoutes = require("./routes/incident.routes");
 const rentRoutes = require("./routes/rent.routes");
 
-app.use("/api", authRoutes);
-app.use("/user", userRoutes);
+app.use("/user", authRoutes);
 app.use("/machine", machineRoutes);
 app.use("/incident", incidentRoutes);
 app.use("/rent", rentRoutes);
