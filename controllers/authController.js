@@ -62,7 +62,7 @@ const login = async (req, res) => {
 };
 
 const verifyToken = async (req, res) => {
-  const {token} = req.body;
+  const { token } = req.body;
   if (!token) return res.status(400).json({ message: "Token not found" });
   jwt.verify(token, process.env.TOKEN_SECRET, async (err, user) => {
     if (err) return res.status(400).json({ message: "Invalid token" });
@@ -77,8 +77,7 @@ const verifyToken = async (req, res) => {
       role: userFound.role,
     });
   });
-  
-}
+};
 
 const logout = (req, res) => {
   res.cookie("token", "", {
@@ -100,10 +99,36 @@ const profile = async (req, res) => {
   });
 };
 
+async function getAllUsers(req, res) {
+  User.find()
+    .then((user) => {
+      console.log("users found", user);
+      res.status(200).json(user);
+    })
+    .catch((err) => {
+      console.log(err, "Something went wrong when fetching all users");
+      res.status(400).json(err);
+    });
+}
+
+async function getUserById(req, res) {
+  User.findById(req.params.id)
+    .then((user) => {
+      console.log("User found by ID: ", user);
+      res.status(200).json(user);
+    })
+    .catch((err) => {
+      console.log("User ID not found", err);
+      res.status(400).json(err);
+    });
+}
+
 module.exports = {
   register,
   login,
   logout,
   profile,
-  verifyToken
+  verifyToken,
+  getAllUsers,
+  getUserById,
 };

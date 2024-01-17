@@ -1,4 +1,5 @@
 const Incident = require("../models/incident.model");
+const userModel = require("../models/user.model");
 
 async function createIncident(req, res) {
   Incident.create(req.body)
@@ -14,6 +15,9 @@ async function createIncident(req, res) {
 
 async function getAllIncidents(req, res) {
   Incident.find()
+    .populate("userClient")
+    .populate("machine")
+    .exec()
     .then((incident) => {
       console.log("incidents found", incident);
       res.status(200).json(incident);

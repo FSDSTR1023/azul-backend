@@ -6,6 +6,7 @@ const rentSchema = new Schema(
   {
     machine: { type: Schema.Types.ObjectId, ref: "Machine" },
     user: { type: Schema.Types.ObjectId, ref: "User" },
+    status: { type: String, required: true, trim: true, minlength: 3 },
     dateRentStart: {
       type: Date,
       required: true,

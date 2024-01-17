@@ -15,4 +15,8 @@ router.post("/verify", authController.verifyToken);
 
 router.get("/profile", authRequired, authController.profile);
 
+router.get("/users", authController.getAllUsers);
+
+router.get("/users/:id", authController.getUserById);
+
 module.exports = router;
