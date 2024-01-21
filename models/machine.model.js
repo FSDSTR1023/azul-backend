@@ -29,15 +29,15 @@ machineSchema.pre("save", async function (next) {
         .sort({ customId: -1 })
         .exec();
       const baseLetters = "MAQ";
-      const numericPartLength = 3;
-      const currentNumericPart =
+      const numberLength = 3;
+      const currentNumbers =
         maxCustomId && maxCustomId.customId
           ? parseInt(maxCustomId.customId.slice(baseLetters.length))
           : 0;
-      const newCustomIdNumber = currentNumericPart + 1;
+      const newCustomIdNumber = currentNumbers + 1;
       const paddedNumericPart = newCustomIdNumber
         .toString()
-        .padStart(numericPartLength, "0");
+        .padStart(numberLength, "0");
       this.customId = baseLetters + paddedNumericPart;
     }
 
