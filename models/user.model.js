@@ -18,7 +18,7 @@ const userSchema = new Schema(
     city: { type: String, trim: true, minlength: 3 },
     zipCode: { type: Number, trim: true, minlength: 3 },
     role: { type: String, required: true, trim: true, minlength: 3 },
-    image: { type: String, data: Buffer },
+    image: { type: String },
   },
   {
     timestamps: true,

@@ -12,7 +12,7 @@ const incidentSchema = new Schema(
     type: { type: String, required: true, trim: true, minlength: 3 },
     description: { type: String, required: true, trim: true, minlength: 3 },
     machine: { type: Schema.Types.ObjectId, ref: "Machine" },
-    image: { type: String, data: Buffer },
+    image: { type: String },
     status: { type: String, required: true, trim: true, minlength: 3 }, // en progreso, completado
     dateReported: {
       type: Date,
