@@ -16,6 +16,7 @@ async function createIncident(req, res) {
 async function getAllIncidents(req, res) {
   Incident.find()
     .populate("userClient")
+    .populate("userAT")
     .populate("machine")
     .exec()
     .then((incident) => {

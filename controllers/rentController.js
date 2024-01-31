@@ -14,7 +14,7 @@ async function createRent(req, res) {
 
 async function getAllRents(req, res) {
   Rent.find()
-    .populate("user")
+    .populate("userClient")
     .populate("machine")
     .exec()
     .then((rent) => {
