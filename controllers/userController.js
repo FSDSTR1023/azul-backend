@@ -1,15 +1,27 @@
 const User = require("../models/user.model");
+const cloudinary = require('cloudinary').v2;
 
 async function createUser(req, res) {
-  User.create(req.body)
-    .then((user) => {
-      console.log("user created successfully", user);
-      res.status(200).json(user);
-    })
-    .catch((err) => {
-      console.log(err, "Something went wrong when creating a new user");
-      res.status(400).json(err);
+  try {
+    const result = await cloudinary.uploader.upload(req.files.file.tempFilePath);
+    const imageUrl = result.secure_url;
+    const user = await User.create({
+      name: req.body.name,
+      lastName: req.body.lastName,
+      email: req.body.email,
+      password: req.body.password,
+      street: req.body.street,
+      city: req.body.city,
+      zipCode: req.body.zipCode,
+      role: req.body.role,
+      image: req.body.imageUrl
     });
+    console.log("user created successfully", user);
+    res.status(200).json(user);
+  } catch (error) {
+    console.log(err, "Something went wrong when creating a new user");
+      res.status(400).json(err);
+  }
 }
 
 async function getAllUsers(req, res) {
