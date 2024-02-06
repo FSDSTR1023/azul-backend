@@ -12,8 +12,10 @@ const machineSchema = new Schema(
     model: { type: String, required: true, trim: true, minlength: 3 },
     year: { type: Number, required: true, trim: true, minlength: 3 },
     category: { type: String, required: true, trim: true, minlength: 3 },
-    image: { type: String },
+    description: { type: String },
     pricePerDay: { type: Number, required: true },
+    image: { type: [String] },
+    file: { type: [String] },
     status: { type: String, required: true, trim: true, minlength: 3 },
   },
   {
