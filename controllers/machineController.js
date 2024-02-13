@@ -37,20 +37,15 @@ async function getMachineById(req, res) {
 }
 
 async function updateMachine(req, res) {
-  Machine.findByIdAndUpdate(
-    req.params.id,
-    req.body,
-    { upsert: true },
-    { new: true }
-  )
-    .then((machine) => {
-      console.log("The machine has been updated: ", machine);
-      res.status(200).json(machine);
-    })
-    .catch((err) => {
-      console.log("The machine was not updated", err);
-      res.status(400).json(err);
-    });
+  const { id } = req.params;
+  const update = req.body;
+
+  try {
+    const updatedDocument = await Machine.findByIdAndUpdate(id, update, { new: true, upsert: true });
+    res.json(updatedDocument); 
+  } catch (error) {
+    res.status(500).json({ message: 'Error updating machine', error: error.message });
+  }
 }
 
 async function deleteMachine(req, res) {
