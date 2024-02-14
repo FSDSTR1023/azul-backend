@@ -4,10 +4,10 @@ const cookieParser = require("cookie-parser");
 const app = express();
 const port = 3000;
 
-app.use(cors({ origin: process.env.ORIGIN_ALLOW, credentials: true }));
 app.use(express.json());
 require("dotenv").config();
 app.use(cookieParser());
+app.use(cors({ origin: process.env.ORIGIN_ALLOW, credentials: true }));
 
 const mongoose = require("mongoose");
 const mongoDB =
