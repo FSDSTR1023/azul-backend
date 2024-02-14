@@ -51,6 +51,8 @@ const login = async (req, res) => {
     // res.cookie("token", token);
     res.json({
       id: userFound._id,
+      name: userFound.name,
+      lastName: userFound.lastName,
       email: userFound.email,
       token,
       createdAt: userFound.createdAt,
