@@ -17,6 +17,11 @@ router.get("/profile", authRequired, authController.profile);
 
 router.get("/users", authController.getAllUsers);
 
-router.get("/users/:id", authController.getUserById);
+router.get("/:id", authController.getUserById);
+
+router.get("/update/:id", authController.getUserById);
+
+router.delete("delete/:id", authController.deleteUser);
+
 
 module.exports = router;

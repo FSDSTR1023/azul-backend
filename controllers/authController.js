@@ -5,6 +5,7 @@ const jwt = require("jsonwebtoken");
 
 const register = async (req, res) => {
   const { name, lastName, email, password, role } = req.body;
+  console.log(req.body, "req.body")
 
   try {
     const passwordHash = await bcrypt.hash(password, 10);
@@ -19,14 +20,15 @@ const register = async (req, res) => {
 
     const userSaved = await newUser.save();
     const token = await createAccessToken({ id: userSaved._id });
+    console.log("userSaved", userSaved);
 
     // res.cookie("token", token);
     res.json({
       id: userSaved._id,
+      name: userSaved.name,
+      lastName: userSaved.lastName,
       email: userSaved.email,
-      token,
-      createdAt: userSaved.createdAt,
-      updatedAt: userSaved.updatedAt,
+      role: userSaved.role,
     });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -35,6 +37,7 @@ const register = async (req, res) => {
 
 const login = async (req, res) => {
   const { email, password } = req.body;
+  console.log(req.body, "req.body")
 
   try {
     const userFound = await User.findOne({ email });
@@ -55,8 +58,6 @@ const login = async (req, res) => {
       lastName: userFound.lastName,
       email: userFound.email,
       token,
-      createdAt: userFound.createdAt,
-      updatedAt: userFound.updatedAt,
     });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -95,17 +96,27 @@ const profile = async (req, res) => {
 
   return res.json({
     id: userFound._id,
+    name: userFound.name,
+    lastName: userFound.lastName,
     email: userFound.email,
-    createdAt: userFound.createdAt,
-    updatedAt: userFound.updatedAt,
+    role: userFound.role,
   });
 };
 
 async function getAllUsers(req, res) {
   User.find()
     .then((user) => {
+      const users = user.map((user) => {
+        return {
+          id: user._id,
+          name: user.name,
+          lastName: user.lastName,
+          email: user.email,
+          role: user.role,
+        };
+      });
       console.log("users found", user);
-      res.status(200).json(user);
+      res.status(200).json(users);
     })
     .catch((err) => {
       console.log(err, "Something went wrong when fetching all users");
@@ -117,7 +128,25 @@ async function getUserById(req, res) {
   User.findById(req.params.id)
     .then((user) => {
       console.log("User found by ID: ", user);
-      res.status(200).json(user);
+      res.status(200).json({
+        id: user._id,
+        name: user.name,
+        lastName: user.lastName,
+        email: user.email,
+        role: user.role,
+      });
+    })
+    .catch((err) => {
+      console.log("User ID not found", err);
+      res.status(400).json(err);
+    });
+}
+
+async function deleteUser(req, res) {
+  User.findById(req.params.id)
+    .then((user) => {
+      console.log("User found by ID: ", user);
+      res.status(204).json('user deleted');
     })
     .catch((err) => {
       console.log("User ID not found", err);
@@ -133,4 +162,5 @@ module.exports = {
   verifyToken,
   getAllUsers,
   getUserById,
+  deleteUser
 };
