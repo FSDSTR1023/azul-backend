@@ -11,6 +11,8 @@ router.get("/:id", incidentController.getIncidentById);
 
 router.put("/:id", incidentController.updateIncident);
 
+router.put("/close/:id", incidentController.closeIncident);
+
 router.delete("/:id", incidentController.deleteIncident);
 
 module.exports = router;

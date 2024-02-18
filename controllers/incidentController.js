@@ -58,6 +58,25 @@ async function updateIncident(req, res) {
     });
 }
 
+async function closeIncident(req, res) {
+  try {
+    const updatedIncident = await Incident.findByIdAndUpdate(
+      req.params.id,
+      { status: "COMPLETED" },
+      { new: true }
+    );
+
+    if (!updatedIncident) {
+      return res.status(404).json({ message: "Incident not found" });
+    }
+
+    return res.status(200).json(updatedIncident);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+}
+
 async function deleteIncident(req, res) {
   Incident.findByIdAndDelete(req.params.id)
     .then((incident) => {
@@ -75,5 +94,6 @@ module.exports = {
   getAllIncidents,
   getIncidentById,
   updateIncident,
+  closeIncident,
   deleteIncident,
 };

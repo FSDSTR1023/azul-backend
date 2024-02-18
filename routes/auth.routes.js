@@ -15,13 +15,15 @@ router.post("/verify", authController.verifyToken);
 
 router.get("/profile", authRequired, authController.profile);
 
+router.put("/profile/update", authRequired, authController.updateProfile);
+
 router.get("/users", authController.getAllUsers);
 
 router.get("/:id", authController.getUserById);
 
-router.get("/update/:id", authController.getUserById);
+router.put("/update/:id", authController.updateUser);
 
-router.delete("delete/:id", authController.deleteUser);
+router.delete("/delete/:id", authController.deleteUser);
 
 
 module.exports = router;
