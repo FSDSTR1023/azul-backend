@@ -33,11 +33,13 @@ const userRoutes = require("./routes/user.routes");
 const machineRoutes = require("./routes/machine.routes");
 const incidentRoutes = require("./routes/incident.routes");
 const rentRoutes = require("./routes/rent.routes");
+const mailRoutes = require("./routes/mail.routes")
 
 app.use("/user", authRoutes);
 app.use("/machine", machineRoutes);
 app.use("/incident", incidentRoutes);
 app.use("/rent", rentRoutes);
+app.use("/mail", mailRoutes);
 
 app.get("/", (req, res) => {
   console.log(process.env.DB_USER, "process.env.DB_USER de app.js");
