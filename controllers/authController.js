@@ -41,10 +41,11 @@ const login = async (req, res) => {
 
   try {
     const userFound = await User.findOne({ email });
-
+    console.log(userFound, "userFound")
     if (!userFound) return res.status(400).json({ message: "User not found" });
 
     const isMatch = await bcrypt.compare(password, userFound.password);
+    console.log(isMatch, "isMatch")
 
     if (!isMatch)
       return res.status(400).json({ message: "Incorrect password" });
@@ -61,6 +62,7 @@ const login = async (req, res) => {
       token,
     });
   } catch (error) {
+    console.log(error, "error")
     res.status(500).json({ message: error.message });
   }
 };
@@ -173,10 +175,20 @@ async function getUserById(req, res) {
 
 async function updateUser(req, res) {
   const { id } = req.params;
-  const update = req.body;
+
+  const { name, lastName, email, password, role } = req.body;
+  const passwordHash = await bcrypt.hash(password, 10);
+
+  const updatedUser = {
+    name,
+    lastName,
+    email,
+    password: passwordHash,
+    role,
+  };
 
   try {
-    const updatedDocument = await User.findByIdAndUpdate(id, update, { new: true, upsert: true });
+    const updatedDocument = await User.findByIdAndUpdate(id, updatedUser, { new: true, upsert: true });
     res.json(updatedDocument); 
   } catch (error) {
     res.status(500).json({ message: 'Error updating machine', error: error.message });
