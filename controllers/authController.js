@@ -97,24 +97,27 @@ const logout = (req, res) => {
 
 const profile = async (req, res) => {
   console.log(req.user, "req.user")
-  const userFound = await User.findById(req.user.id);
 
+  const userFound = await User.findById(req.user.id);
+console.log(userFound, "userFound")
   if (!userFound) return res.status(400).json({ message: "User not found" });
 
   return res.json({
-    id: userFound._id,
     name: userFound.name,
     lastName: userFound.lastName,
     email: userFound.email,
-    role: userFound.role,
   });
 };
 
 const updateProfile = async (req, res) => {
   console.log(req.user, "req.user")
   console.log(req.body, "req.body")
+
   const update = req.body;
-  const userFound = await User.findById(req.user.id);
+  console.log(update, "update")
+  const userFound = await User.findById(req.user.id)
+
+  if(update.password) update.password = await bcrypt.hash(update.password, 10);
 
   if (!userFound) return res.status(400).json({ message: "User not found" });
 
@@ -207,6 +210,39 @@ async function deleteUser(req, res) {
     });
 }
 
+async function deleteUser(req, res) {
+  User.findByIdAndUpdate(req.params.id)
+    .then((user) => {
+      console.log("User found by ID: ", user);
+      res.status(200).json(user);
+    })
+    .catch((err) => {
+      console.log("User ID not found", err);
+      res.status(400).json(err);
+    });
+}
+
+async function userState(req, res) {
+  const { id } = req.params;
+  const { state } = req.body;
+  try {
+    const userDisabled = await User.findByIdAndUpdate(
+      id,
+      { state: state },
+      { new: true }
+    );
+
+    if (!userDisabled) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    return res.status(200).json(userDisabled);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+}
+
 module.exports = {
   register,
   login,
@@ -217,5 +253,6 @@ module.exports = {
   getAllUsers,
   getUserById,
   updateUser,
+  userState,
   deleteUser
 };

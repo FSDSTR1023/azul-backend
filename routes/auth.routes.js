@@ -23,6 +23,8 @@ router.get("/:id", authController.getUserById);
 
 router.put("/update/:id", authController.updateUser);
 
+router.put("/state/:id", authController.userState);
+
 router.delete("/delete/:id", authController.deleteUser);
 
 

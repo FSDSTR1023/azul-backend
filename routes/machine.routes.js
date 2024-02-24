@@ -11,6 +11,8 @@ router.get("/:id", machineController.getMachineById);
 
 router.put("/:id", machineController.updateMachine);
 
+router.put("/state/:id", machineController.machineState);
+
 router.delete("/:id", machineController.deleteMachine);
 
 module.exports = router;

@@ -60,10 +60,32 @@ async function deleteMachine(req, res) {
     });
 }
 
+async function machineState(req, res) {
+  const { id } = req.params;
+  const { state } = req.body;
+  try {
+    const machineDisabled = await Machine.findByIdAndUpdate(
+      id,
+      { state: state },
+      { new: true }
+    );
+
+    if (!machineDisabled) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    return res.status(200).json(machineDisabled);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+}
+
 module.exports = {
   createMachine,
   getAllMachines,
   getMachineById,
   updateMachine,
+  machineState,
   deleteMachine,
 };

@@ -19,6 +19,7 @@ const userSchema = new Schema(
     zipCode: { type: Number, trim: true, minlength: 3 },
     role: { type: String, required: true, trim: true, minlength: 3 },
     image: { type: String },
+    state: { type: String, required: true, trim: true, minlength: 3, default: "Active" },
   },
   {
     timestamps: true,
