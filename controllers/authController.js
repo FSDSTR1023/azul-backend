@@ -29,6 +29,7 @@ const register = async (req, res) => {
       lastName: userSaved.lastName,
       email: userSaved.email,
       role: userSaved.role,
+      state: userSaved.state,
     });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -42,13 +43,16 @@ const login = async (req, res) => {
   try {
     const userFound = await User.findOne({ email });
     console.log(userFound, "userFound")
-    if (!userFound) return res.status(400).json({ message: "User not found" });
+    if (!userFound) return res.status(500).json({ error: "Usuario no envontrado" });
+
+    if (!userFound.state)
+    return res.status(500).json({ error: "Usuario deshabilitado" });
 
     const isMatch = await bcrypt.compare(password, userFound.password);
     console.log(isMatch, "isMatch")
 
     if (!isMatch)
-      return res.status(400).json({ message: "Incorrect password" });
+      return res.status(500).json({ error: "Contraseña incorrecta" });
 
     const token = await createAccessToken({ id: userFound._id });
 
@@ -147,6 +151,7 @@ async function getAllUsers(req, res) {
           lastName: user.lastName,
           email: user.email,
           role: user.role,
+          state: user.state
         };
       });
       console.log("users found", user);
@@ -168,6 +173,7 @@ async function getUserById(req, res) {
         lastName: user.lastName,
         email: user.email,
         role: user.role,
+        state: user.state
       });
     })
     .catch((err) => {
@@ -223,20 +229,28 @@ async function deleteUser(req, res) {
 }
 
 async function userState(req, res) {
-  const { id } = req.params;
+  const { id } = req.params;  
   const { state } = req.body;
+  console.log(req.params, "req.params")
   try {
-    const userDisabled = await User.findByIdAndUpdate(
+    const user = await User.findByIdAndUpdate(
       id,
       { state: state },
       { new: true }
     );
 
-    if (!userDisabled) {
+    if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    return res.status(200).json(userDisabled);
+    return res.status(200).json({
+          id: user._id,
+          name: user.name,
+          lastName: user.lastName,
+          email: user.email,
+          role: user.role,
+          state: user.state
+        });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: "Internal Server Error" });
