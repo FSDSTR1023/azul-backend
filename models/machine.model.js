@@ -17,7 +17,7 @@ const machineSchema = new Schema(
     image: { type: [String] },
     file: { type: [String] },
     status: { type: String, required: true, trim: true, minlength: 3 },
-    state: { type: String, required: true, trim: true, minlength: 3, default: "Active"},
+    state: { type: Boolean, required: true, trim: true, minlength: 3, default: true},
   },
   {
     timestamps: true,
