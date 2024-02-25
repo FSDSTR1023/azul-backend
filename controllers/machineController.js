@@ -64,17 +64,17 @@ async function machineState(req, res) {
   const { id } = req.params;
   const { state } = req.body;
   try {
-    const machineDisabled = await Machine.findByIdAndUpdate(
+    const machine = await Machine.findByIdAndUpdate(
       id,
       { state: state },
       { new: true }
     );
 
-    if (!machineDisabled) {
+    if (!machine) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    return res.status(200).json(machineDisabled);
+    return res.status(200).json(machine);
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: "Internal Server Error" });
