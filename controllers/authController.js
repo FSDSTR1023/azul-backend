@@ -87,6 +87,20 @@ const verifyToken = async (req, res) => {
   });
 };
 
+const verifyTokenRegistration = async (req, res) => {
+  const { token } = req.body;
+  if (!token) return res.status(400).json({ message: "Token not found" });
+  jwt.verify(token, process.env.TOKEN_SECRET, async (err, user) => {
+    if (err) return res.status(400).json({ message: "Invalid token" });
+    if (!user) return res.status(400).json({ message: "TOKEN Invalidated" });
+    user.verified = true;
+    const userFound = await User.findById(user.id);
+    if (!userFound) return res.status(400).json({ message: "User not found" });
+
+    return res.json({'message': 'Token valid'});
+  });
+};
+
 const logout = (req, res) => {
   res.cookie("token", "", {
     expires: new Date(0),
@@ -95,7 +109,6 @@ const logout = (req, res) => {
 };
 
 const profile = async (req, res) => {
-  console.log(req.user, "req.user")
   const userFound = await User.findById(req.user.id);
 
   if (!userFound) return res.status(400).json({ message: "User not found" });
@@ -110,8 +123,6 @@ const profile = async (req, res) => {
 };
 
 const updateProfile = async (req, res) => {
-  console.log(req.user, "req.user")
-  console.log(req.body, "req.body")
   const update = req.body;
   const userFound = await User.findById(req.user.id);
 
@@ -145,7 +156,7 @@ async function getAllUsers(req, res) {
           role: user.role,
         };
       });
-      console.log("users found", user);
+      // console.log("users found", user);
       res.status(200).json(users);
     })
     .catch((err) => {
@@ -203,6 +214,7 @@ module.exports = {
   profile,
   updateProfile,
   verifyToken,
+  verifyTokenRegistration,
   getAllUsers,
   getUserById,
   updateUser,

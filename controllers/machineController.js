@@ -15,7 +15,7 @@ async function createMachine(req, res) {
 async function getAllMachines(req, res) {
   Machine.find()
     .then((machine) => {
-      console.log("machines found", machine);
+      // console.log("machines found", machine);
       res.status(200).json(machine);
     })
     .catch((err) => {
