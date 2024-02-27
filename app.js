@@ -2,7 +2,16 @@ const express = require("express");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const app = express();
+const http = require("http");
+const server = http.createServer(app);
 const port = 3000;
+const { Server } = require("socket.io");
+const io = new Server(server, {
+  cors: {
+    origin: "*",
+    methods: ["GET", "POST"],
+  },
+});
 
 app.use(express.json());
 require("dotenv").config();
@@ -42,10 +51,23 @@ app.use("/rent", rentRoutes);
 app.use("/mail", mailRoutes);
 
 app.get("/", (req, res) => {
-  console.log(process.env.DB_USER, "process.env.DB_USER de app.js");
+  // console.log(process.env.DB_USER, "process.env.DB_USER de app.js");
   res.send("Hello Mundito!");
+});
+
+io.on("connection", (socket) => {
+  console.log("a user connected");
+    io.emit("userConnection", "Usuario se acaba de conectar");
+    socket.on("disconnect", () => {
+        console.log("user disconnected");
+        io.emit("userConnection", "Usuario se acaba de desconectar");
+      });
 });
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
+});
+
+server.listen(3333, () => {
+  console.log("WEB SERVER listening on port 3333")
 });

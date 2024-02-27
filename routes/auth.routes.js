@@ -13,6 +13,8 @@ router.post("/logout", authController.logout);
 
 router.post("/verify", authController.verifyToken);
 
+router.post("/verify-registration", authController.verifyTokenRegistration);
+
 router.get("/profile", authRequired, authController.profile);
 
 router.put("/profile/update", authRequired, authController.updateProfile);

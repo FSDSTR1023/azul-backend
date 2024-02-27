@@ -11,7 +11,6 @@ const userSchema = new Schema(
       required: true,
       trim: true,
       minlength: 3,
-      unique: true,
     },
     password: { type: String, required: true, trim: true, minlength: 3 },
     street: { type: String, trim: true, minlength: 3 },
@@ -20,6 +19,7 @@ const userSchema = new Schema(
     role: { type: String, required: true, trim: true, minlength: 3 },
     image: { type: String },
     state: { type: Boolean, required: true, trim: true, minlength: 3, default: true },
+    verified: { type: Boolean, required: true, default: false }
   },
   {
     timestamps: true,

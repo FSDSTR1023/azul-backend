@@ -12,8 +12,8 @@ class MailController {
 sendEmail(req, res) {
     const msg = {
         ...this.msg,
-        to: req.body.to, // Change to your recipient
-        subject: req.body.subject,
+        to: 'nucliogrupoazul@gmail.com', // Change to your recipient
+        subject: 'req.body.subject',
         text: 'and easy to do anywhere, even with Node.js',
         html: '<strong>and easy to do anywhere, even with Node.js</strong>',
       };
@@ -23,9 +23,37 @@ sendEmail(req, res) {
           res.send('Email sent')
         })
         .catch((error) => {
-          res.error('Error sending email', error)
+          console.error('Error sending email', error)
         });
 }
+sendEmailTemplate(req, res) {
+    const msg = {
+        ...this.msg,
+        personalizations:[
+            {
+               "to":[
+                  {
+                     email: req.body.to
+                  }
+               ],
+               dynamic_template_data: {
+                token: req.body.token
+               }
+            }
+            ],
+        // to: 'nucliogrupoazul@gmail.com', // Change to your recipient
+        template_id: "d-6258e564bb234cb7bb469dc63b18b221"
+      };
+      sgMail
+        .send(msg)
+        .then(() => {
+          res.send('Email sent')
+        })
+        .catch((error) => {
+          console.error('Error sending email', error)
+        });
+}
+
 }
 
 module.exports = MailController;

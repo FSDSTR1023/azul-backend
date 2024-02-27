@@ -18,7 +18,7 @@ async function getAllRents(req, res) {
     .populate("machine")
     .exec()
     .then((rent) => {
-      console.log("rents found", rent);
+      // console.log("rents found", rent);
       res.status(200).json(rent);
     })
     .catch((err) => {

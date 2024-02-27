@@ -6,3 +6,13 @@ content-type: application/json
     "to": "sabi456@gmail.com",
     "subject": "Prueba email"
 }
+
+###
+
+POST http://localhost:3000/mail/template HTTP/1.1
+content-type: application/json
+
+{
+    "to": "sabi456@gmail.com",
+    "subject": "Prueba template"
+}

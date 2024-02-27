@@ -2,6 +2,7 @@ const User = require("../models/user.model");
 const bcrypt = require("bcryptjs");
 const createAccessToken = require("../libs/jwt");
 const jwt = require("jsonwebtoken");
+const email = require("./mailController")
 
 const register = async (req, res) => {
   const { name, lastName, email, password, role } = req.body;
@@ -30,6 +31,7 @@ const register = async (req, res) => {
       email: userSaved.email,
       role: userSaved.role,
       state: userSaved.state,
+      token: token
     });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -56,7 +58,6 @@ const login = async (req, res) => {
 
     const token = await createAccessToken({ id: userFound._id });
 
-    // res.cookie("token", token);
     res.json({
       id: userFound._id,
       name: userFound.name,
@@ -89,6 +90,20 @@ const verifyToken = async (req, res) => {
       lastName: userFound.lastName,
       role: userFound.role,
     });
+  });
+};
+
+const verifyTokenRegistration = async (req, res) => {
+  const { token } = req.body;
+  if (!token) return res.status(400).json({ message: "Token not found" });
+  jwt.verify(token, process.env.TOKEN_SECRET, async (err, user) => {
+    if (err) return res.status(400).json({ message: "Invalid token" });
+    if (!user) return res.status(400).json({ message: "TOKEN Invalidated" });
+    user.verified = true;
+    const userFound = await User.findById(user.id);
+    if (!userFound) return res.status(400).json({ message: "User not found" });
+
+    return res.json({'message': 'Token valid'});
   });
 };
 
@@ -154,7 +169,7 @@ async function getAllUsers(req, res) {
           state: user.state
         };
       });
-      console.log("users found", user);
+      // console.log("users found", user);
       res.status(200).json(users);
     })
     .catch((err) => {
@@ -264,6 +279,7 @@ module.exports = {
   profile,
   updateProfile,
   verifyToken,
+  verifyTokenRegistration,
   getAllUsers,
   getUserById,
   updateUser,
