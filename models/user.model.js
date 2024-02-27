@@ -11,7 +11,6 @@ const userSchema = new Schema(
       required: true,
       trim: true,
       minlength: 3,
-      unique: true,
     },
     password: { type: String, required: true, trim: true, minlength: 3 },
     street: { type: String, trim: true, minlength: 3 },
@@ -19,6 +18,7 @@ const userSchema = new Schema(
     zipCode: { type: Number, trim: true, minlength: 3 },
     role: { type: String, required: true, trim: true, minlength: 3 },
     image: { type: String },
+    verified: { type: Boolean, required: true, default: false }
   },
   {
     timestamps: true,

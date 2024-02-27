@@ -2,6 +2,7 @@ const User = require("../models/user.model");
 const bcrypt = require("bcryptjs");
 const createAccessToken = require("../libs/jwt");
 const jwt = require("jsonwebtoken");
+const email = require("./mailController")
 
 const register = async (req, res) => {
   const { name, lastName, email, password, role } = req.body;
@@ -29,6 +30,7 @@ const register = async (req, res) => {
       lastName: userSaved.lastName,
       email: userSaved.email,
       role: userSaved.role,
+      token: token
     });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -51,12 +53,12 @@ const login = async (req, res) => {
 
     const token = await createAccessToken({ id: userFound._id });
 
-    // res.cookie("token", token);
     res.json({
       id: userFound._id,
       name: userFound.name,
       lastName: userFound.lastName,
       email: userFound.email,
+      role: userFound.role,
       token,
     });
   } catch (error) {
@@ -66,8 +68,10 @@ const login = async (req, res) => {
 
 const verifyToken = async (req, res) => {
   const { token } = req.body;
+  console.log(req.body, "req.body")
   if (!token) return res.status(400).json({ message: "Token not found" });
   jwt.verify(token, process.env.TOKEN_SECRET, async (err, user) => {
+    if (!user) return res.status(400).json({ message: "TOKEN Invalidated" });
     if (err) return res.status(400).json({ message: "Invalid token" });
 
     const userFound = await User.findById(user.id);
@@ -77,6 +81,7 @@ const verifyToken = async (req, res) => {
       id: userFound._id,
       email: userFound.email,
       name: userFound.name,
+      lastName: userFound.lastName,
       role: userFound.role,
     });
   });
@@ -90,6 +95,7 @@ const logout = (req, res) => {
 };
 
 const profile = async (req, res) => {
+  console.log(req.user, "req.user")
   const userFound = await User.findById(req.user.id);
 
   if (!userFound) return res.status(400).json({ message: "User not found" });
@@ -101,6 +107,30 @@ const profile = async (req, res) => {
     email: userFound.email,
     role: userFound.role,
   });
+};
+
+const updateProfile = async (req, res) => {
+  console.log(req.user, "req.user")
+  console.log(req.body, "req.body")
+  const update = req.body;
+  const userFound = await User.findById(req.user.id);
+
+  if (!userFound) return res.status(400).json({ message: "User not found" });
+
+  try {
+    const updatedDocument = await User.findByIdAndUpdate(req.user.id, update, { new: true, upsert: true });
+    res.json({ message: 'Profile updated', user: updatedDocument }); 
+  } catch (error) {
+    res.status(500).json({ message: 'Error updating machine', error: error.message });
+  }
+
+  // return res.json({
+  //   id: userFound._id,
+  //   name: userFound.name,
+  //   lastName: userFound.lastName,
+  //   email: userFound.email,
+  //   role: userFound.role,
+  // });
 };
 
 async function getAllUsers(req, res) {
@@ -142,11 +172,23 @@ async function getUserById(req, res) {
     });
 }
 
+async function updateUser(req, res) {
+  const { id } = req.params;
+  const update = req.body;
+
+  try {
+    const updatedDocument = await User.findByIdAndUpdate(id, update, { new: true, upsert: true });
+    res.json(updatedDocument); 
+  } catch (error) {
+    res.status(500).json({ message: 'Error updating machine', error: error.message });
+  }
+}
+
 async function deleteUser(req, res) {
-  User.findById(req.params.id)
+  User.findByIdAndDelete(req.params.id)
     .then((user) => {
       console.log("User found by ID: ", user);
-      res.status(204).json('user deleted');
+      res.status(200).json(user);
     })
     .catch((err) => {
       console.log("User ID not found", err);
@@ -159,8 +201,10 @@ module.exports = {
   login,
   logout,
   profile,
+  updateProfile,
   verifyToken,
   getAllUsers,
   getUserById,
+  updateUser,
   deleteUser
 };

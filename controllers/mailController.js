@@ -36,6 +36,9 @@ sendEmailTemplate(req, res) {
                      email: req.body.to
                   }
                ],
+               dynamic_template_data: {
+                token: req.body.token
+               }
             }
             ],
         // to: 'nucliogrupoazul@gmail.com', // Change to your recipient
