@@ -42,7 +42,7 @@ sendEmailTemplate(req, res) {
             }
             ],
         // to: 'nucliogrupoazul@gmail.com', // Change to your recipient
-        template_id: "d-6258e564bb234cb7bb469dc63b18b221"
+        template_id: "d-cbcd31c1fec140eb9174fc539a4dfd90"
       };
       sgMail
         .send(msg)
