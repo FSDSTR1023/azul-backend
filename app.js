@@ -6,6 +6,7 @@ const http = require("http");
 const server = http.createServer(app);
 const port = 3000;
 const { Server } = require("socket.io");
+app.use(cors({ origin: process.env.ORIGIN_ALLOW, credentials: true }));
 const io = new Server(server, {
   cors: {
     origin: "*",
@@ -18,7 +19,6 @@ global.io = io;
 app.use(express.json());
 require("dotenv").config();
 app.use(cookieParser());
-app.use(cors({ origin: process.env.ORIGIN_ALLOW, credentials: true }));
 
 const mongoose = require("mongoose");
 const mongoDB =
