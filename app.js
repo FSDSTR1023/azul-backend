@@ -9,7 +9,7 @@ const { Server } = require("socket.io");
 app.use(cors({ origin: process.env.ORIGIN_ALLOW, credentials: true }));
 const io = new Server(server, {
   cors: {
-    origin: "*",
+    origin: process.env.ORIGIN_ALLOW,
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
   },
 });
