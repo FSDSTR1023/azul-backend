@@ -4,6 +4,7 @@ async function createRent(req, res) {
   Rent.create(req.body)
     .then((rent) => {
       console.log("New rent created successfully", rent);
+      global.io.emit('rentCreated')
       res.status(200).json(rent);
     })
     .catch((err) => {

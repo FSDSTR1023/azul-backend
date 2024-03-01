@@ -22,6 +22,7 @@ const register = async (req, res) => {
     const userSaved = await newUser.save();
     const token = await createAccessToken({ id: userSaved._id });
     console.log("userSaved", userSaved);
+    global.io.emit('userCreated')
 
     // res.cookie("token", token);
     res.json({
@@ -57,6 +58,7 @@ const login = async (req, res) => {
       return res.status(500).json({ error: "Contraseña incorrecta" });
 
     const token = await createAccessToken({ id: userFound._id });
+    global.io.emit('userLogIn', userFound.name + " " + userFound.lastName)
 
     res.json({
       id: userFound._id,
