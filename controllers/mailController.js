@@ -13,9 +13,8 @@ sendEmail(req, res) {
     const msg = {
         ...this.msg,
         to: 'nucliogrupoazul@gmail.com', // Change to your recipient
-        subject: 'req.body.subject',
-        text: 'and easy to do anywhere, even with Node.js',
-        html: '<strong>and easy to do anywhere, even with Node.js</strong>',
+        subject: 'User not verified',
+        text: 'User not verified',
       };
       sgMail
         .send(msg)
