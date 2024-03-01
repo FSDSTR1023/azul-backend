@@ -5,6 +5,7 @@ async function createIncident(req, res) {
   Incident.create(req.body)
     .then((incident) => {
       console.log("incident created successfully", incident);
+      global.io.emit('incidenceCreated')
       res.status(200).json(incident);
     })
     .catch((err) => {
