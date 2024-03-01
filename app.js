@@ -5,7 +5,6 @@ const app = express();
 const http = require("http");
 const server = http.createServer(app);
 const port = 3000;
-const wsPort = 3333;
 const { Server } = require("socket.io");
 const io = new Server(server, {
   cors: {
@@ -13,6 +12,7 @@ const io = new Server(server, {
     methods: ["GET", "POST"],
   },
 });
+
 global.io = io;
 
 app.use(express.json());
@@ -66,10 +66,10 @@ io.on("connection", (socket) => {
       });
 });
 
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
-});
+// app.listen(port, () => {
+//   console.log(`Example app listening on port ${port}`);
+// });
 
-server.listen(wsPort, () => {
-  console.log(`WEB SERVER listening on port ${wsPort}`)
+server.listen(port, () => {
+  console.log(`WEB SERVER listening on port ${port}`)
 });
