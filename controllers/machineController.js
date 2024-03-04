@@ -4,6 +4,7 @@ async function createMachine(req, res) {
   Machine.create(req.body)
     .then((machine) => {
       console.log("machine created successfully", machine);
+      global.io.emit("machineCreated", machine, req.headers.socket);
       res.status(200).json(machine);
     })
     .catch((err) => {
