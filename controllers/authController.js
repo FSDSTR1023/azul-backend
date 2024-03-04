@@ -58,7 +58,8 @@ const login = async (req, res) => {
       return res.status(500).json({ error: "Contraseña incorrecta" });
 
     const token = await createAccessToken({ id: userFound._id });
-    global.io.emit('userLogIn', userFound.name + " " + userFound.lastName)
+    console.log(req.socket.id, "req.socket.id")
+    global.io.emit('userLogIn', userFound.name + " " + userFound.lastName, socket => socket.id !== req.socket.id)
 
     res.json({
       id: userFound._id,
@@ -203,21 +204,35 @@ async function updateUser(req, res) {
   const { id } = req.params;
 
   const { name, lastName, email, password, role } = req.body;
-  const passwordHash = await bcrypt.hash(password, 10);
-
-  const updatedUser = {
-    name,
-    lastName,
-    email,
-    password: passwordHash,
-    role,
-  };
-
-  try {
-    const updatedDocument = await User.findByIdAndUpdate(id, updatedUser, { new: true, upsert: true });
-    res.json(updatedDocument); 
-  } catch (error) {
-    res.status(500).json({ message: 'Error updating machine', error: error.message });
+  if(!id) return res.status(400).json({ message: 'User ID not found' });
+  if(!password) {
+    const updatedUser = {
+      name,
+      lastName,
+      email,
+      role,
+    };   
+    try {
+      const updatedDocument = await User.findByIdAndUpdate(id, updatedUser, { new: true, upsert: true });
+      res.json(updatedDocument); 
+    } catch (error) {
+      res.status(500).json({ message: 'Error updating machine', error: error.message });
+    }
+  }else{
+    const passwordHash = await bcrypt.hash(password, 10);
+    const updatedUser = {
+      name,
+      lastName,
+      email,
+      password: passwordHash,
+      role,
+    };
+    try {
+      const updatedDocument = await User.findByIdAndUpdate(id, updatedUser, { new: true, upsert: true });
+      res.json(updatedDocument); 
+    } catch (error) {
+      res.status(500).json({ message: 'Error updating machine', error: error.message });
+    }
   }
 }
 
