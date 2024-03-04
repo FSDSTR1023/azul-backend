@@ -59,7 +59,7 @@ app.get("/", (req, res) => {
 
 io.on("connection", (socket) => {
   console.log("a user connected");
-    io.emit("userConnection", "Usuario se acaba de conectar");
+    io.emit("userConnection", "Usuario se acaba de conectar", socket.id);
     socket.on("disconnect", () => {
         console.log("user disconnected");
         io.emit("userConnection", "Usuario se acaba de desconectar");

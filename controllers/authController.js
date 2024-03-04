@@ -22,7 +22,7 @@ const register = async (req, res) => {
     const userSaved = await newUser.save();
     const token = await createAccessToken({ id: userSaved._id });
     console.log("userSaved", userSaved);
-    global.io.emit('userCreated')
+    global.io.emit('userCreated', userSaved.name + " " + userSaved.lastName, req.headers.socket)
 
     // res.cookie("token", token);
     res.json({
@@ -42,6 +42,7 @@ const register = async (req, res) => {
 const login = async (req, res) => {
   const { email, password } = req.body;
   console.log(req.body, "req.body")
+  console.log(req.headers.socket)
 
   try {
     const userFound = await User.findOne({ email });
@@ -58,8 +59,8 @@ const login = async (req, res) => {
       return res.status(500).json({ error: "Contraseña incorrecta" });
 
     const token = await createAccessToken({ id: userFound._id });
-    console.log(req.socket.id, "req.socket.id")
-    global.io.emit('userLogIn', userFound.name + " " + userFound.lastName, socket => socket.id !== req.socket.id)
+    console.log(req.headers.socket, "req.socket.id")
+    global.io.emit('userLogIn', userFound.name + " " + userFound.lastName, req.headers.socket)
 
     res.json({
       id: userFound._id,
